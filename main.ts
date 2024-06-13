@@ -45,6 +45,8 @@ const winState: GameState = {
         basic.showIcon(IconNames.Diamond);
     },
     onAB: () => {
+        gameData.firedCoords = [];
+        gameData.selectedCoord = { x: 2, y: 2 }
         gameData.currentState = stateMap["discovery"]
     }
 }
@@ -59,6 +61,8 @@ const loseState: GameState = {
         basic.showIcon(IconNames.Skull);
     },
     onAB: () => {
+        gameData.firedCoords = [];
+        gameData.selectedCoord = { x: 2, y: 2 }
         gameData.currentState = stateMap["discovery"]
     }
 }
@@ -72,7 +76,7 @@ const turnState: GameState = {
     onUpdate: () => {
         basic.clearScreen();
         for (const coord of gameData.firedCoords) {
-            led.plotBrightness(coord.x, coord.y, 0.5);
+            led.plot(coord.x, coord.y);
         }
         led.plot(gameData.selectedCoord.x, gameData.selectedCoord.y);
     },
@@ -105,6 +109,14 @@ const waitingState: GameState = {
     onMessage: (messageType, id, data) => {
         if (messageType === "T" && id === playerid) {
             gameData.currentState = stateMap["turn"];
+        }
+        if (messageType === "E") {
+            if (data === playerid) {
+                gameData.currentState = stateMap["win"]
+            }
+            else {
+                gameData.currentState = stateMap["loss"]
+            }
         }
     },
     onUpdate: () => {
