@@ -15,8 +15,8 @@ interface GameState {
 interface GameData {
     currentState: GameState | undefined;
     shipCoord: { x: number, y: number };
-    selectedCoord: { x: number, y: number };
-    firedCoords: { x: number, y: number }[];
+    selectedCoord: { x: number, y: number; };
+    firedCoords: { x: number, y: number; }[];
 }
 
 const messagePrefix = "BS"
@@ -72,9 +72,8 @@ const turnState: GameState = {
     onUpdate: () => {
         basic.clearScreen();
         for (const coord of gameData.firedCoords) {
-            led.plot(coord.x, coord.y);
+            led.plotBrightness(coord.x, coord.y, 0.5);
         }
-        led.unplot(gameData.selectedCoord.x, gameData.selectedCoord.y);
         led.plot(gameData.selectedCoord.x, gameData.selectedCoord.y);
     },
     onA: () => {
@@ -94,6 +93,7 @@ const turnState: GameState = {
         gameData.selectedCoord.y = nextY;
     },
     onAB: () => {
+        gameData.firedCoords.push({x: gameData.selectedCoord.x, y: gameData.selectedCoord.y});
         radio.sendString(messagePrefix + "F" + playerid + ":" + gameData.selectedCoord.x + "" + gameData.selectedCoord.y);
         gameData.currentState = stateMap["waiting"];
     }
