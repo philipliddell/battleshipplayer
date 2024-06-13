@@ -174,6 +174,7 @@ input.onButtonPressed(Button.B, () => {
 })
 
 input.onButtonPressed(Button.AB, () => {
+    music.playSoundEffect(music.builtinSoundEffect(soundExpression.soaring), SoundExpressionPlayMode.UntilDone)
     if (gameData.currentState.onAB) {
         gameData.currentState.onAB();
     }
